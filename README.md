@@ -24,6 +24,8 @@ Proxy service that translates Anthropic-style Claude API requests into OpenRoute
 3. **Run the server**
    ```bash
    python claude_openrouter_proxy.py
+   # or
+   uv run python claude_openrouter_proxy.py
    ```
    The Flask app listens on `http://0.0.0.0:8000`.
 
