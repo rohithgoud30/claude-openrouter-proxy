@@ -1,0 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "claude-openrouter-proxy"
+version = "0.1.0"
+description = "Proxy service that adapts Claude clients to the OpenRouter API."
+requires-python = ">=3.10"
+dependencies = [
+    "flask",
+    "requests",
+    "python-dotenv",
+]
