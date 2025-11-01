@@ -58,6 +58,25 @@ curl -N -X POST http://localhost:8000/v1/messages \
 ```
 Each streamed line is a Claude `content_block_delta` JSON object. The final line signals `message_delta` with `stop_reason: "end_turn"`.
 
+## macOS Claude Code Example
+If you're using Anthropic's Claude desktop app or CLI on macOS, point it at the proxy by exporting only the Claude-style variables and removing any conflicting token-based auth:
+```bash
+# Inspect what Claude variables are currently set (zsh/macOS Terminal)
+env | grep -E 'ANTHROPIC_|ANTHROPIC_BASE_URL'
+
+# Keep the proxy-friendly pair
+export ANTHROPIC_API_KEY="dummy-key"
+export ANTHROPIC_BASE_URL="http://127.0.0.1:8000"
+
+# Remove the token variant for this shell session
+unset ANTHROPIC_AUTH_TOKEN
+```
+With the proxy running, you can call any OpenRouter model that your key can access through the Claude CLI, for example:
+```bash
+claude --model openai/gpt-oss-120b "Write a short status update."
+```
+Replace `openai/gpt-oss-120b` with any other OpenRouter model ID you'd like to expose via the proxy.
+
 ## Deployment Notes
 - Behind a reverse proxy, be sure to forward the `Authorization` header and allow streaming responses.
 - The proxy reuses a single `requests.Session`; restart the process to pick up new environment variables.
@@ -67,3 +86,4 @@ Each streamed line is a Claude `content_block_delta` JSON object. The final line
 - **401/403 from OpenRouter** – Verify `OPENROUTER_API_KEY` and that your account has access to the configured model.
 - **Model unavailable** – Override `OPENROUTER_MODEL` with one you can access.
 - **Token count mismatch** – `count_tokens` uses a simple character heuristic; clients should treat it as an estimate.
+- **Claude Code warns about multiple auth methods** – Clear `ANTHROPIC_AUTH_TOKEN` and keep only `ANTHROPIC_API_KEY` + `ANTHROPIC_BASE_URL` when pointing Claude at the proxy.
