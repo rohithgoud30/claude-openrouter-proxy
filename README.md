@@ -61,7 +61,7 @@ Each streamed line is a Claude `content_block_delta` JSON object. The final line
 ## Claude Code Setup Examples
 Point the Claude CLI or desktop app at the proxy by keeping only the Claude-style API key and base URL variables and unsetting the token variant. Use one of the platform-specific snippets below.
 
-### macOS (zsh or bash)
+### macOS / Linux (zsh or bash)
 ```bash
 # Inspect what Claude variables are currently set
 env | grep -E 'ANTHROPIC_|ANTHROPIC_BASE_URL'
@@ -75,22 +75,6 @@ unset ANTHROPIC_AUTH_TOKEN
 
 # Call any OpenRouter model through the proxy
 claude --model openai/gpt-oss-120b "Write a short status update."
-```
-
-### Linux (bash)
-```bash
-# Inspect currently exported Anthropic variables
-env | grep -E 'ANTHROPIC_|ANTHROPIC_BASE_URL'
-
-# Keep the proxy-friendly pair
-export ANTHROPIC_API_KEY="dummy-key"
-export ANTHROPIC_BASE_URL="http://127.0.0.1:8000"
-
-# Drop the token auth variant for this session
-unset ANTHROPIC_AUTH_TOKEN
-
-# Invoke any OpenRouter model via the proxy
-claude --model openai/gpt-oss-120b "Summarize today's deploy."
 ```
 
 ### Windows (PowerShell)
