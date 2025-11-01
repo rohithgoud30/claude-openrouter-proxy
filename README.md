@@ -76,6 +76,7 @@ unset ANTHROPIC_AUTH_TOKEN
 # Call any OpenRouter model through the proxy
 claude --model openai/gpt-oss-120b "Write a short status update."
 ```
+Leave off the quoted prompt (for example just run `claude --model openai/gpt-oss-120b`) to drop into the CLI's interactive chat loop.
 
 ### Windows (PowerShell)
 ```powershell
@@ -92,6 +93,7 @@ Remove-Item Env:ANTHROPIC_AUTH_TOKEN -ErrorAction SilentlyContinue
 # Call any OpenRouter model exposed by the proxy
 claude.exe --model openai/gpt-oss-120b "Draft a release note."
 ```
+Omit the trailing prompt to enter the interactive interface instead of sending a one-off command.
 
 Replace `openai/gpt-oss-120b` with any other OpenRouter model ID your key can access. To persist the environment variables, add the relevant commands to your shell profile or PowerShell `$PROFILE`.
 
