@@ -58,10 +58,12 @@ curl -N -X POST http://localhost:8000/v1/messages \
 ```
 Each streamed line is a Claude `content_block_delta` JSON object. The final line signals `message_delta` with `stop_reason: "end_turn"`.
 
-## macOS Claude Code Example
-If you're using Anthropic's Claude desktop app or CLI on macOS, point it at the proxy by exporting only the Claude-style variables and removing any conflicting token-based auth:
+## Claude Code Setup Examples
+Point the Claude CLI or desktop app at the proxy by keeping only the Claude-style API key and base URL variables and unsetting the token variant. Use one of the platform-specific snippets below.
+
+### macOS (zsh or bash)
 ```bash
-# Inspect what Claude variables are currently set (zsh/macOS Terminal)
+# Inspect what Claude variables are currently set
 env | grep -E 'ANTHROPIC_|ANTHROPIC_BASE_URL'
 
 # Keep the proxy-friendly pair
@@ -70,12 +72,44 @@ export ANTHROPIC_BASE_URL="http://127.0.0.1:8000"
 
 # Remove the token variant for this shell session
 unset ANTHROPIC_AUTH_TOKEN
-```
-With the proxy running, you can call any OpenRouter model that your key can access through the Claude CLI, for example:
-```bash
+
+# Call any OpenRouter model through the proxy
 claude --model openai/gpt-oss-120b "Write a short status update."
 ```
-Replace `openai/gpt-oss-120b` with any other OpenRouter model ID you'd like to expose via the proxy.
+
+### Linux (bash)
+```bash
+# Inspect currently exported Anthropic variables
+env | grep -E 'ANTHROPIC_|ANTHROPIC_BASE_URL'
+
+# Keep the proxy-friendly pair
+export ANTHROPIC_API_KEY="dummy-key"
+export ANTHROPIC_BASE_URL="http://127.0.0.1:8000"
+
+# Drop the token auth variant for this session
+unset ANTHROPIC_AUTH_TOKEN
+
+# Invoke any OpenRouter model via the proxy
+claude --model openai/gpt-oss-120b "Summarize today's deploy."
+```
+
+### Windows (PowerShell)
+```powershell
+# Inspect Anthropic-related environment variables
+Get-ChildItem Env: | Where-Object { $_.Name -match 'ANTHROPIC_|ANTHROPIC_BASE_URL' }
+
+# Keep the proxy-friendly pair for the current session
+$env:ANTHROPIC_API_KEY = "dummy-key"
+$env:ANTHROPIC_BASE_URL = "http://127.0.0.1:8000"
+
+# Remove the token variant
+Remove-Item Env:ANTHROPIC_AUTH_TOKEN -ErrorAction SilentlyContinue
+
+# Call any OpenRouter model exposed by the proxy
+claude.exe --model openai/gpt-oss-120b "Draft a release note."
+```
+
+Replace `openai/gpt-oss-120b` with any other OpenRouter model ID your key can access. To persist the environment variables, add the relevant commands to your shell profile or PowerShell `$PROFILE`.
 
 ## Deployment Notes
 - Behind a reverse proxy, be sure to forward the `Authorization` header and allow streaming responses.
